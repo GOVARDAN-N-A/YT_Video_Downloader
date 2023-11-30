@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .resolutions-container {
+            margin-top: 20px;
+        }
+
+        .resolution-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .download-form {
+            display: flex;
+            align-items: center;
+        }
+
+        h2, p {
+            color: #555;
+        }
+
+        h3 {
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Video Downloader</h1>
+    <form action="{{ url_for('get_resolutions') }}" method="post">
+        <label for="url">Paste YouTube Link Here:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Get Resolutions</button>
+    </form>
+
+    {% if resolutions %}
+        <h2>{{ title }}</h2>
+        <p>Duration: {{ duration }} seconds</p>
+
+        <h3>Available Resolutions:</h3>
+        <div class="resolutions-container">
+            {% for res in resolutions %}
+                <div class="resolution-item">
+                    <span>{{ res }}</span>
+                    <form action="{{ url_for('download') }}" method="post" class="download-form">
+                        <input type="hidden" name="url" value="{{ url }}">
+                        <input type="hidden" name="resolution" value="{{ res.split(':')[0] }}">
+                        <button type="submit">Download</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>
